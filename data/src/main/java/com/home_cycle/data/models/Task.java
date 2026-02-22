@@ -10,11 +10,12 @@ public class Task {
     private long completedAt; // TODO: Confirm correct data type for date
     private int recurrence; // TODO: Date type definition
     private int completedBy;
+    private int createdBy;
 
     public Task() {
     }
 
-    public Task(int id, String title, String description, int householdId, long dueDate, boolean completed, long completedAt, int recurrence, int completedBy) {
+    public Task(int id, String title, String description, int householdId, long dueDate, boolean completed, long completedAt, int recurrence, int completedBy, int createdBy) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -24,6 +25,7 @@ public class Task {
         this.completedAt = completedAt;
         this.recurrence = recurrence;
         this.completedBy = completedBy;
+        this.createdBy = createdBy;
     }
 
     public int getId() {
@@ -96,5 +98,13 @@ public class Task {
 
     public void setCompletedBy(int completedBy) {
         this.completedBy = completedBy;
+    }
+
+    public int getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(int createdBy) {
+        this.createdBy = createdBy;
     }
 }
