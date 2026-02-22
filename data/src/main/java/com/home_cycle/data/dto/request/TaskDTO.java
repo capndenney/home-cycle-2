@@ -22,7 +22,7 @@ public class TaskDTO {
     public TaskDTO(String title, String description, int householdId, long dueDate, boolean completed, long completedAt, int recurrence, int completedBy, int createdBy) {
         this.title = title;
         this.description = description;
-        this.householdId = householdId;
+        this.householdId = householdId; // TODO: Do we need this value, or can HHID be added on the back?
         this.dueDate = dueDate;
         this.completed = completed;
         this.completedAt = completedAt;

@@ -10,10 +10,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
 @RequestMapping("/tasks")
@@ -21,6 +20,9 @@ public class TaskController {
 
     @Autowired
     private TaskRepository taskRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     // Get all tasks
     @GetMapping("")
@@ -39,16 +41,60 @@ public class TaskController {
 
     // Add new task
     // TODO: Determine connection point to front end and link found user ID to task creation
-//    @PostMapping(value = "/newtask")
-//    public ResponseEntity<?> createTask(@Validated @RequestBody TaskDTO taskDTO) {
-//        User user = UserRepository.findById(taskDTO.getCreatedBy()).orElse(null);
-//        Task task = new Task()
-//    }
+    @PostMapping(value = "/newtask")
+    public ResponseEntity<?> createTask(@Validated @RequestBody TaskDTO taskDTO) {
+        User user = userRepository.findById(taskDTO.getCreatedBy()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+        Task task = new Task();
+        task.setTitle(taskDTO.getTitle());
+        task.setDescription(taskDTO.getDescription());
+        task.setHouseholdId(taskDTO.getHouseholdId());
+        task.setDueDate(taskDTO.getDueDate());
+        task.setCompleted(taskDTO.isCompleted());
+        task.setCompletedAt(taskDTO.getCompletedAt());
+        task.setRecurrence(taskDTO.getRecurrence());
+        task.setCreatedBy(user.getId());
+        Task savedTask = taskRepository.save(task);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedTask);
+    }
 
-    // Update existing task
+    // Update existing task - not completion status
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateTask(@PathVariable int id, @Validated @RequestBody TaskDTO taskDTO) {
+        return taskRepository.findById(id)
+                .map(existingTask -> {
+                    existingTask.setTitle(taskDTO.getTitle());
+                    existingTask.setDescription(taskDTO.getDescription());
+                    existingTask.setDueDate(taskDTO.getDueDate());
+                    existingTask.setRecurrence(taskDTO.getRecurrence());
+                    Task updatedTask = taskRepository.save(existingTask);
+                    return ResponseEntity.ok(updatedTask);
+                })
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
 
+    // Update task completion status
+    @PatchMapping("/{id}/complete")
+    public ResponseEntity<?> completeTask(@PathVariable int id, @RequestParam int userId) {
+        return taskRepository.findById(id)
+                .map(task -> {
+                    task.setCompleted(true);
+                    task.setCompletedAt(System.currentTimeMillis());
+                    task.setCompletedBy(userId);
+                    Task updatedTask = taskRepository.save(task);
+                    return ResponseEntity.ok(updatedTask);
+                })
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
 
     // Delete task by id
-
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteTask(@PathVariable int id) {
+        if (taskRepository.existsById(id)) {
+            taskRepository.deleteById(id);
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
 }
