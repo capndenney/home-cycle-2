@@ -47,11 +47,11 @@ public class TaskController {
         Task task = new Task();
         task.setTitle(taskDTO.getTitle());
         task.setDescription(taskDTO.getDescription());
-        task.setHouseholdId(taskDTO.getHouseholdId());
+        task.setHousehold(taskDTO.getHousehold());
         task.setDueDate(taskDTO.getDueDate());
         task.setCompleted(taskDTO.isCompleted());
         task.setCompletedAt(taskDTO.getCompletedAt());
-        task.setRecurrence(taskDTO.getRecurrence());
+        task.setRecurrence(taskDTO.getRecurrence()); // TODO: use plusDays for date math
         task.setCreatedBy(user.getId());
         Task savedTask = taskRepository.save(task);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedTask);

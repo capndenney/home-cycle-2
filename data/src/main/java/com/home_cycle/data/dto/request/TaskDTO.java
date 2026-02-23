@@ -1,5 +1,6 @@
 package com.home_cycle.data.dto.request;
 
+import com.home_cycle.data.models.Household;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -10,7 +11,7 @@ public class TaskDTO {
     String title;
 
     private String description;
-    private int householdId;
+    private Household household;
     @NotNull(message = "Due Date is required")
     private long dueDate; // TODO: Confirm correct data type for date
     private boolean completed;
@@ -19,10 +20,10 @@ public class TaskDTO {
     private int completedBy;
     private int createdBy;
 
-    public TaskDTO(String title, String description, int householdId, long dueDate, boolean completed, long completedAt, int recurrence, int completedBy, int createdBy) {
+    public TaskDTO(String title, String description, Household household, long dueDate, boolean completed, long completedAt, int recurrence, int completedBy, int createdBy) {
         this.title = title;
         this.description = description;
-        this.householdId = householdId; // TODO: Do we need this value, or can HHID be added on the back?
+        this.household = household;
         this.dueDate = dueDate;
         this.completed = completed;
         this.completedAt = completedAt;
@@ -47,12 +48,12 @@ public class TaskDTO {
         this.description = description;
     }
 
-    public int getHouseholdId() {
-        return householdId;
+    public Household getHousehold() {
+        return household;
     }
 
-    public void setHouseholdId(int householdId) {
-        this.householdId = householdId;
+    public void setHousehold(Household household) {
+        this.household = household;
     }
 
     public long getDueDate() {

@@ -1,9 +1,20 @@
 package com.home_cycle.data.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import jakarta.persistence.*;
+
+@Entity
+@Table(name="users")
 public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private int householdId;
+    @ManyToOne
+    @JoinColumn(name="household", nullable = false)
+    @JsonBackReference
+    private Household household;
     private long createdAt; // TODO: Confirm correct data type for date
+    @Column(unique = true)
     private String email;
     private String password; // TODO: Password encryption or hashing?
     private boolean isPrimary;
@@ -11,9 +22,9 @@ public class User {
     public User() {
     }
 
-    public User(int id, int householdId, long createdAt, String email, String password, boolean isPrimary) {
+    public User(int id, Household household, long createdAt, String email, String password, boolean isPrimary) {
         this.id = id;
-        this.householdId = householdId;
+        this.household = household;
         this.createdAt = createdAt;
         this.email = email;
         this.password = password;
@@ -28,12 +39,12 @@ public class User {
         this.id = id;
     }
 
-    public int getHouseholdId() {
-        return householdId;
+    public Household getHousehold() {
+        return household;
     }
 
-    public void setHouseholdId(int householdId) {
-        this.householdId = householdId;
+    public void setHousehold(Household household) {
+        this.household = household;
     }
 
     public long getCreatedAt() {
