@@ -1,9 +1,7 @@
 package com.home_cycle.data.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import jakarta.persistence.*;
 
 @Entity
 public class Task {
@@ -12,7 +10,10 @@ public class Task {
     private int id;
     private String title;
     private String description;
-    private int householdId;
+    @ManyToOne
+    @JoinColumn(name="household", nullable = false)
+    @JsonBackReference
+    private Household household;
     private long dueDate; // TODO: Confirm correct data type for date
     private boolean completed;
     private long completedAt; // TODO: Confirm correct data type for date
@@ -23,11 +24,11 @@ public class Task {
     public Task() {
     }
 
-    public Task(int id, String title, String description, int householdId, long dueDate, boolean completed, long completedAt, int recurrence, int completedBy, int createdBy) {
+    public Task(int id, String title, String description, Household household, long dueDate, boolean completed, long completedAt, int recurrence, int completedBy, int createdBy) {
         this.id = id;
         this.title = title;
         this.description = description;
-        this.householdId = householdId;
+        this.household = household;
         this.dueDate = dueDate;
         this.completed = completed;
         this.completedAt = completedAt;
@@ -60,12 +61,12 @@ public class Task {
         this.description = description;
     }
 
-    public int getHouseholdId() {
-        return householdId;
+    public Household getHousehold() {
+        return household;
     }
 
-    public void setHouseholdId(int householdId) {
-        this.householdId = householdId;
+    public void setHousehold(Household household) {
+        this.household = household;
     }
 
     public long getDueDate() {

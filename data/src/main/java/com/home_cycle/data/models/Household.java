@@ -13,6 +13,8 @@ public class Household {
     @OneToMany(mappedBy = "household", cascade = CascadeType.ALL)
     private List<User> users;
     private String notes;
+    @OneToMany(mappedBy = "household", cascade = CascadeType.ALL)
+    private List<Task> tasks;
 
     public Household() {
     }
@@ -59,5 +61,21 @@ public class Household {
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    public List<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<User> users) {
+        this.users = users;
+    }
+
+    public List<Task> getTasks() {
+        return tasks;
+    }
+
+    public void setTasks(List<Task> tasks) {
+        this.tasks = tasks;
     }
 }

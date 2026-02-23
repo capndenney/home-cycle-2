@@ -47,7 +47,7 @@ public class TaskController {
         Task task = new Task();
         task.setTitle(taskDTO.getTitle());
         task.setDescription(taskDTO.getDescription());
-        task.setHouseholdId(taskDTO.getHouseholdId());
+        task.setHousehold(taskDTO.getHousehold());
         task.setDueDate(taskDTO.getDueDate());
         task.setCompleted(taskDTO.isCompleted());
         task.setCompletedAt(taskDTO.getCompletedAt());
