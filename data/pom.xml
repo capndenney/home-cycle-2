@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.home-cycle</groupId>
-	<artifactId>data</artifactId>
+	<artifactId>homecycle-back-end</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>data</name>
 	<description>Demo project for Spring Boot</description>
