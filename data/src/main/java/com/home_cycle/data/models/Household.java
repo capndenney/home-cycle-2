@@ -1,9 +1,17 @@
 package com.home_cycle.data.models;
 
+import jakarta.persistence.*;
+import java.util.List;
+
+@Entity
 public class Household {
-    private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
     private int createdBy;
     private long createdAt; // TODO: Confirm correct data type for date
+    @OneToMany(mappedBy = "household", cascade = CascadeType.ALL)
+    private List<User> users;
     private String notes;
 
     public Household() {
@@ -14,6 +22,11 @@ public class Household {
         this.createdBy = createdBy;
         this.createdAt = createdAt;
         this.notes = notes;
+    }
+
+    public void addUser(User user) {
+        users.add(user);
+        user.setHousehold(this);
     }
 
     public int getId() {
