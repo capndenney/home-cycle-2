@@ -8,8 +8,10 @@ public class Household {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private int createdBy;
-    private long createdAt; // TODO: Confirm correct data type for date
+    @OneToOne
+    @JoinColumn(name = "creator_id", unique = true)
+    private User createdBy;
+    private long createdAt; // TODO: date type
     @OneToMany(mappedBy = "household", cascade = CascadeType.ALL)
     private List<User> users;
     private String notes;
@@ -19,7 +21,7 @@ public class Household {
     public Household() {
     }
 
-    public Household(int id, int createdBy, long createdAt, String notes) {
+    public Household(int id, User createdBy, long createdAt, String notes) {
         this.id = id;
         this.createdBy = createdBy;
         this.createdAt = createdAt;
@@ -39,11 +41,11 @@ public class Household {
         this.id = id;
     }
 
-    public int getCreatedBy() {
+    public User getCreatedBy() {
         return createdBy;
     }
 
-    public void setCreatedBy(int createdBy) {
+    public void setCreatedBy(User createdBy) {
         this.createdBy = createdBy;
     }
 

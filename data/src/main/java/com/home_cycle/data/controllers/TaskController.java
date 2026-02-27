@@ -52,6 +52,7 @@ public class TaskController {
         task.setCompleted(taskDTO.isCompleted());
         task.setCompletedAt(taskDTO.getCompletedAt());
         task.setRecurrence(taskDTO.getRecurrence()); // TODO: use plusDays for date math
+        // TODO: createdBy is now a User object, update accordingly
         task.setCreatedBy(user.getId());
         Task savedTask = taskRepository.save(task);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedTask);
@@ -74,7 +75,8 @@ public class TaskController {
 
     // Update task completion status
     @PatchMapping("/{id}/complete")
-    public ResponseEntity<?> completeTask(@PathVariable int id, @RequestParam int userId) {
+    // TODO: Update now that I am using User object instead of user ID
+    public ResponseEntity<?> completeTask(@PathVariable int id, @RequestParam User userId) {
         return taskRepository.findById(id)
                 .map(task -> {
                     task.setCompleted(true);
