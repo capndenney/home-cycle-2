@@ -13,6 +13,7 @@ public class User {
     @JoinColumn(name="household", nullable = false)
     @JsonBackReference
     private Household household;
+    private String name;
     private long createdAt; // TODO: Confirm correct data type for date
     @Column(unique = true)
     private String email;
@@ -22,11 +23,12 @@ public class User {
     public User() {
     }
 
-    public User(int id, Household household, long createdAt, String email, String password, boolean isPrimary) {
+    public User(int id, Household household, String name, long createdAt, String email, String password, boolean isPrimary) {
         this.id = id;
         this.household = household;
         this.createdAt = createdAt;
         this.email = email;
+        this.name = name;
         this.password = password;
         this.isPrimary = isPrimary;
     }
@@ -53,6 +55,14 @@ public class User {
 
     public void setCreatedAt(long createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getEmail() {

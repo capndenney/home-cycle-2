@@ -2,6 +2,7 @@ package com.home_cycle.data.controllers;
 
 import com.home_cycle.data.repositories.HouseholdRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -11,7 +12,6 @@ public class HouseholdController {
     HouseholdRepository householdRepository;
 
         // DO NOT get all households for security
-
         // Get specific household by id
 
         // Add new household
@@ -19,4 +19,5 @@ public class HouseholdController {
         // Update existing household
 
         // Delete household by id
+        // TODO: Do not delete, if primary user is deleted, try to assign new primary user, if no users left, mark as deleted
 }
