@@ -1,6 +1,7 @@
 package com.home_cycle.data.dto.request;
 
 import com.home_cycle.data.models.Household;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -9,7 +10,7 @@ public class TaskDTO {
     @NotBlank(message = "Task Title is required")
     @Size(max = 100, message = "Task Title must be less than 100 characters")
     String title;
-
+    @Min(value = 5, message = "Task Description must be at least 5 characters")
     private String description;
     private Household household;
     @NotNull(message = "Due Date is required")

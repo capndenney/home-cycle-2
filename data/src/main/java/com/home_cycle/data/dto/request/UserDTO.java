@@ -1,9 +1,11 @@
 package com.home_cycle.data.dto.request;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 
 public class UserDTO {
     @NotNull(message = "Email is required")
+    @Email
     private String email;
     // TODO: Password requirements, auth and encryption
     private String password;
