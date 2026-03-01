@@ -37,7 +37,27 @@ public class UserController {
     }
 
     // Update user details
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateUser(@PathVariable int id, @Validated @RequestBody UserDTO userDTO) {
+        return userRepository.findById(id)
+                .map(user -> {
+                    user.setName(userDTO.getName());
+                    user.setPassword(userDTO.getPassword());
+                    User updatedUser = userRepository.save(user);
+                    return ResponseEntity.ok(updatedUser);
+                })
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
 
     // "Delete" User by ID
-    // TODO: Mark user as deleted, and append "deleted" to email to allow for reuse of email address if user deletes account and creates new one.
+    @PutMapping("/{id}/delete")
+    public ResponseEntity<?> deleteUser(@PathVariable int id) {
+        return userRepository.findById(id)
+                .map(user -> {
+                    user.setEmail(user.getEmail() + "_deleted_" + user.getId());
+                    User deletedUser = userRepository.save(user);
+                    return ResponseEntity.ok(deletedUser);
+                })
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
 }
