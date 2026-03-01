@@ -41,7 +41,7 @@ public class TaskController {
 
     // Add new task
     // TODO: Determine connection point to front end and link found user ID to task creation
-    @PostMapping(value = "/newtask")
+    @PostMapping("/newtask")
     public ResponseEntity<?> createTask(@Validated @RequestBody TaskDTO taskDTO) {
         User user = userRepository.findById(taskDTO.getCreatedBy()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
         Task task = new Task();
