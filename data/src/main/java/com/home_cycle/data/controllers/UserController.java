@@ -32,6 +32,7 @@ public class UserController {
         newUser.setEmail(userDTO.getEmail());
         newUser.setPassword(userDTO.getPassword());
         newUser.setName(userDTO.getName());
+        newUser.setCreatedAt(System.currentTimeMillis());
         User savedUser = userRepository.save(newUser);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
     }
