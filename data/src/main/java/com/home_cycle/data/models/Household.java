@@ -21,6 +21,8 @@ public class Household {
     private long createdAt; // TODO: date type
     @OneToMany(mappedBy = "household", cascade = CascadeType.ALL)
     private List<User> users;
+    @OneToOne
+    @JoinColumn(name = "primary_user_id", unique = true)
     private User primaryUser;
     private String notes;
     @OneToMany(mappedBy = "household", cascade = CascadeType.ALL)
