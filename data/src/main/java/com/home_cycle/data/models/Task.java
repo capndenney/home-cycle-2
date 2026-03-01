@@ -18,13 +18,17 @@ public class Task {
     private boolean completed;
     private long completedAt; // TODO: Confirm correct data type for date
     private int recurrence; // TODO: Date type definition
-    private int completedBy;
-    private int createdBy;
+    @ManyToOne
+    @JoinColumn(name="completed_by")
+    private User completedBy;
+    @ManyToOne
+    @JoinColumn(name="created_by", nullable = false)
+    private User createdBy;
 
     public Task() {
     }
 
-    public Task(int id, String title, String description, Household household, long dueDate, boolean completed, long completedAt, int recurrence, int completedBy, int createdBy) {
+    public Task(int id, String title, String description, Household household, long dueDate, boolean completed, long completedAt, int recurrence, User completedBy, User createdBy) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -101,19 +105,19 @@ public class Task {
         this.recurrence = recurrence;
     }
 
-    public int getCompletedBy() {
+    public User getCompletedBy() {
         return completedBy;
     }
 
-    public void setCompletedBy(int completedBy) {
+    public void setCompletedBy(User completedBy) {
         this.completedBy = completedBy;
     }
 
-    public int getCreatedBy() {
+    public User getCreatedBy() {
         return createdBy;
     }
 
-    public void setCreatedBy(int createdBy) {
+    public void setCreatedBy(User createdBy) {
         this.createdBy = createdBy;
     }
 }

@@ -41,7 +41,7 @@ public class TaskController {
 
     // Add new task
     // TODO: Determine connection point to front end and link found user ID to task creation
-    @PostMapping(value = "/newtask")
+    @PostMapping("/newtask")
     public ResponseEntity<?> createTask(@Validated @RequestBody TaskDTO taskDTO) {
         User user = userRepository.findById(taskDTO.getCreatedBy()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
         Task task = new Task();
@@ -52,7 +52,7 @@ public class TaskController {
         task.setCompleted(taskDTO.isCompleted());
         task.setCompletedAt(taskDTO.getCompletedAt());
         task.setRecurrence(taskDTO.getRecurrence()); // TODO: use plusDays for date math
-        task.setCreatedBy(user.getId());
+        task.setCreatedBy(user);
         Task savedTask = taskRepository.save(task);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedTask);
     }
@@ -73,8 +73,8 @@ public class TaskController {
     }
 
     // Update task completion status
-    @PatchMapping("/{id}/complete")
-    public ResponseEntity<?> completeTask(@PathVariable int id, @RequestParam int userId) {
+    @PutMapping("/{id}/complete")
+    public ResponseEntity<?> completeTask(@PathVariable int id, @RequestParam User userId) {
         return taskRepository.findById(id)
                 .map(task -> {
                     task.setCompleted(true);
@@ -96,5 +96,4 @@ public class TaskController {
             return ResponseEntity.notFound().build();
         }
     }
-
 }
