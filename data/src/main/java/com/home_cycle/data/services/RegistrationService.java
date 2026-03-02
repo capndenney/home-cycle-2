@@ -30,11 +30,13 @@ public class RegistrationService {
         newUser.setName(dto.getName());
         newUser.setHousehold(household);
         newUser.setPrimary(true);
+        newUser.setCreatedAt(System.currentTimeMillis());
         newUser = userRepository.save(newUser);
 
         household.setPrimaryUser(newUser);
         household.setCreatedBy(newUser);
         household.addUser(newUser);
+        household.setCreatedAt(System.currentTimeMillis());
         householdRepository.save(household);
 
         return dataMapping.toHouseholdDTO(household);

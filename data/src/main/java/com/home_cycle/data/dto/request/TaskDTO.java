@@ -10,27 +10,29 @@ public class TaskDTO {
     @NotBlank(message = "Task Title is required")
     @Size(max = 100, message = "Task Title must be less than 100 characters")
     String title;
-    @Min(value = 5, message = "Task Description must be at least 5 characters")
+    @Size(min = 5, message = "Task Description must be at least 5 characters")
     private String description;
-    private Household household;
+    private Integer householdId;
     @NotNull(message = "Due Date is required")
-    private long dueDate; // TODO: Confirm correct data type for date
-    private boolean completed;
-    private long completedAt; // TODO: Confirm correct data type for date
-    private int recurrence; // TODO: Date type definition
-    private int completedBy;
-    private int createdBy;
+    private Long dueDate; // TODO: Confirm correct data type for date
+    private Boolean completed;
+    private Long completedAt; // TODO: Confirm correct data type for date
+    private Integer recurrence; // TODO: Date type definition
+    private Integer completedBy;
+    private Integer createdBy;
+    private Long createdAt;
 
-    public TaskDTO(String title, String description, Household household, long dueDate, boolean completed, long completedAt, int recurrence, int completedBy, int createdBy) {
+    public TaskDTO(String title, String description, Integer householdId, Long dueDate, Boolean completed, Long completedAt, Integer recurrence, Integer completedBy, Integer createdBy, Long createdAt) {
         this.title = title;
         this.description = description;
-        this.household = household;
+        this.householdId = householdId;
         this.dueDate = dueDate;
         this.completed = completed;
         this.completedAt = completedAt;
         this.recurrence = recurrence;
         this.completedBy = completedBy;
         this.createdBy = createdBy;
+        this.createdAt = createdAt;
     }
 
     public String getTitle() {
@@ -49,59 +51,67 @@ public class TaskDTO {
         this.description = description;
     }
 
-    public Household getHousehold() {
-        return household;
+    public Integer getHouseholdId() {
+        return householdId;
     }
 
-    public void setHousehold(Household household) {
-        this.household = household;
+    public void setHouseholdId(Integer householdId) {
+        this.householdId = householdId;
     }
 
-    public long getDueDate() {
+    public Long getDueDate() {
         return dueDate;
     }
 
-    public void setDueDate(long dueDate) {
+    public void setDueDate(Long dueDate) {
         this.dueDate = dueDate;
     }
 
-    public boolean isCompleted() {
+    public Boolean isCompleted() {
         return completed;
     }
 
-    public void setCompleted(boolean completed) {
+    public void setCompleted(Boolean completed) {
         this.completed = completed;
     }
 
-    public long getCompletedAt() {
+    public Long getCompletedAt() {
         return completedAt;
     }
 
-    public void setCompletedAt(long completedAt) {
+    public void setCompletedAt(Long completedAt) {
         this.completedAt = completedAt;
     }
 
-    public int getRecurrence() {
+    public Integer getRecurrence() {
         return recurrence;
     }
 
-    public void setRecurrence(int recurrence) {
+    public void setRecurrence(Integer recurrence) {
         this.recurrence = recurrence;
     }
 
-    public int getCompletedBy() {
+    public Integer getCompletedBy() {
         return completedBy;
     }
 
-    public void setCompletedBy(int completedBy) {
+    public void setCompletedBy(Integer completedBy) {
         this.completedBy = completedBy;
     }
 
-    public int getCreatedBy() {
+    public Integer getCreatedBy() {
         return createdBy;
     }
 
-    public void setCreatedBy(int createdBy) {
+    public void setCreatedBy(Integer createdBy) {
         this.createdBy = createdBy;
+    }
+
+    public Long getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Long createdAt) {
+        this.createdAt = createdAt;
     }
 }
