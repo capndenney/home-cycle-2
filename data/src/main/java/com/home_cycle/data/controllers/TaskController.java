@@ -1,8 +1,10 @@
 package com.home_cycle.data.controllers;
 
 import com.home_cycle.data.dto.request.TaskDTO;
+import com.home_cycle.data.models.Household;
 import com.home_cycle.data.models.Task;
 import com.home_cycle.data.models.User;
+import com.home_cycle.data.repositories.HouseholdRepository;
 import com.home_cycle.data.repositories.TaskRepository;
 import com.home_cycle.data.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,9 @@ public class TaskController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private HouseholdRepository householdRepository;
 
     // Get all tasks
     @GetMapping("")
@@ -45,11 +50,13 @@ public class TaskController {
     public ResponseEntity<?> createTask(@Validated @RequestBody TaskDTO taskDTO) {
         User user = userRepository.findById(taskDTO.getCreatedBy()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
         Task task = new Task();
+        Household household = householdRepository.findById(taskDTO.getHouseholdId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Household not found"));
         task.setTitle(taskDTO.getTitle());
         task.setDescription(taskDTO.getDescription());
-        task.setHousehold(taskDTO.getHousehold());
+        task.setHousehold(household);
         task.setDueDate(taskDTO.getDueDate());
         task.setCompleted(taskDTO.isCompleted());
+        task.setCreatedAt(System.currentTimeMillis());
         task.setCompletedAt(taskDTO.getCompletedAt());
         task.setRecurrence(taskDTO.getRecurrence()); // TODO: use plusDays for date math
         task.setCreatedBy(user);

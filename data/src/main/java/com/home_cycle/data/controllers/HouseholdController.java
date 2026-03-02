@@ -10,6 +10,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/household")
 public class HouseholdController {
 
     @Autowired
@@ -20,7 +21,7 @@ public class HouseholdController {
 
     // DO NOT get all households for security
     // Get specific household by id
-    @GetMapping("/household/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<?> getHouseholdById(@PathVariable int id) {
         return householdRepository.findById(id)
                 .map(ResponseEntity::ok)
@@ -28,12 +29,13 @@ public class HouseholdController {
     }
 
     // Add new household
-    @PostMapping("/household/new")
+    @PostMapping("/new")
     public ResponseEntity<?> createHousehold(@Validated @RequestBody HouseholdDTO householdDTO) {
         Household household = new Household();
         household.setNotes(householdDTO.getNotes());
         household.setTasks(householdDTO.getTasks());
         household.setUsers(householdDTO.getUsers());
+        household.setCreatedAt(System.currentTimeMillis());
         Household savedHousehold = householdRepository.save(household);
         return ResponseEntity.ok(savedHousehold);
     }
@@ -41,7 +43,7 @@ public class HouseholdController {
     // TODO: Create signup link user can share for others to join household
 
     // Update existing household
-    @PutMapping("/household/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<?> updateHousehold(@PathVariable int id, @Validated @RequestBody HouseholdDTO householdDTO) {
         return householdRepository.findById(id)
                 .map(household -> {
@@ -56,7 +58,7 @@ public class HouseholdController {
 
     // Delete household by id
     // TODO: Add service that handles succession logic
-    @DeleteMapping("/household/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteHousehold(@PathVariable int id) {
         return householdRepository.findById(id)
                 .map(household -> {

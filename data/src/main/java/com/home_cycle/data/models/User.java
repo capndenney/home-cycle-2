@@ -10,7 +10,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @ManyToOne
-    @JoinColumn(name="household", nullable = false)
+    @JoinColumn(name="household", nullable = true)
     @JsonBackReference
     private Household household;
     private String name;

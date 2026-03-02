@@ -5,9 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Table(name = "household")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -16,15 +18,17 @@ public class Household {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @OneToOne
-    @JoinColumn(name = "creator_id", unique = true)
+    @JoinColumn(name = "creator_id", nullable = true)
     private User createdBy;
     private long createdAt; // TODO: date type
     @OneToMany(mappedBy = "household", cascade = CascadeType.ALL)
-    private List<User> users;
+    private List<User> users = new ArrayList<>();
+    @OneToOne
+    @JoinColumn(name = "primary_user_id", nullable = true)
     private User primaryUser;
     private String notes;
     @OneToMany(mappedBy = "household", cascade = CascadeType.ALL)
-    private List<Task> tasks;
+    private List<Task> tasks = new ArrayList<>();
 
     public void addUser(User user) {
         users.add(user);
