@@ -1,6 +1,6 @@
 package com.home_cycle.data.controllers;
 
-import com.home_cycle.data.dto.request.UserDTO;
+import com.home_cycle.data.dto.request.UserRequestDTO;
 import com.home_cycle.data.models.User;
 import com.home_cycle.data.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ public class UserController {
 
     // Add new user to database
     @PostMapping("/new")
-    public ResponseEntity<?> createUser(@Validated @RequestBody UserDTO userDTO) {
+    public ResponseEntity<?> createUser(@Validated @RequestBody UserRequestDTO userDTO) {
         User newUser = new User();
         newUser.setEmail(userDTO.getEmail());
         newUser.setPassword(userDTO.getPassword());
@@ -39,7 +39,7 @@ public class UserController {
 
     // Update user details
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateUser(@PathVariable int id, @Validated @RequestBody UserDTO userDTO) {
+    public ResponseEntity<?> updateUser(@PathVariable int id, @Validated @RequestBody UserRequestDTO userDTO) {
         return userRepository.findById(id)
                 .map(user -> {
                     user.setName(userDTO.getName());
