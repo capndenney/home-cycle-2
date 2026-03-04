@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.Instant;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/users")
 public class UserController {
 
     @Autowired

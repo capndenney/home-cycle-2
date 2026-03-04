@@ -18,7 +18,7 @@ import java.time.Instant;
 import java.util.List;
 
 @RestController
-@RequestMapping("/tasks")
+@RequestMapping("/api/tasks")
 public class TaskController {
 
     @Autowired
