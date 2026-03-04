@@ -11,12 +11,6 @@ import { taskService } from "../services/taskService";
 const EditTask = ({ saveTask, tasks }) => {
   const { id } = useParams();
 
-  // TODO: Delete when tied in to back end. 
-  // const newTaskId =
-  //   tasks.reduce((max, t) => {
-  //     return t.taskId > max ? t.taskId : max;
-  //   }, 0) + 1;
-
   const loadTask = id ? tasks.find((t) => t.id === Number(id)) : null;
 
   const getInitialTaskData = () => {
@@ -39,7 +33,7 @@ const EditTask = ({ saveTask, tasks }) => {
   
   };
 
-  // const initialTaskData = getInitialTaskData(); // TODO: Delete where Sample data is being pulled.
+  const initialTaskData = getInitialTaskData();
 
   const [loadedTaskData] = useState(initialTaskData);
   const [descData, setDescData] = useState(initialTaskData.description);
@@ -83,21 +77,18 @@ const EditTask = ({ saveTask, tasks }) => {
         // Update when id exists
         const response = await taskService.updateTask(id, taskDto);
         savedTask = response.data;
+        saveTask(savedTask);
       } else {
         // Create when no id exists
         const response = await taskService.create(taskDto);
         savedTask = response.data;
+        saveTask(savedTask);
       }
       navigate(`/task/${savedTask.id}`);
     } catch (er) {
       console.error("Error saving task:", er);
       // TODO: If time, add in error handling to display message to user on failure.
     }
-
-    saveTask(taskDto);
-    // setTimeout(() => {
-    //   navigate(`/task/${loadedTaskData.taskId}`);
-    // });
   };
 
   const handleCancel = (e) => {
@@ -111,10 +102,10 @@ const EditTask = ({ saveTask, tasks }) => {
   return (
     <Card viewType="edit add-blur">
       <h3>{titleData}</h3>
-      <p>Task ID: {loadedTaskData.taskId}</p>
+      <p>Task ID: {loadedTaskData.id}</p>
       <Input
         label="Title"
-        id={`input-title-${loadedTaskData.taskId}`}
+        id={`input-title-${loadedTaskData.id}`}
         value={titleData}
         handleChange={titleChange}
         required={true}

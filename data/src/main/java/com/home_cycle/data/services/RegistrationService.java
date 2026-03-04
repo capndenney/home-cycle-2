@@ -9,6 +9,7 @@ import com.home_cycle.data.repositories.HouseholdRepository;
 import com.home_cycle.data.repositories.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -19,6 +20,7 @@ public class RegistrationService {
     @Autowired private HouseholdRepository householdRepository;
     @Autowired private UserRepository userRepository;
     @Autowired private DataMapping dataMapping;
+    @Autowired private PasswordEncoder passwordEncoder;
 
     @Transactional
     public HouseholdResponseDTO registerHousehold(RegistrationDTO dto) {
@@ -28,7 +30,7 @@ public class RegistrationService {
 
         User newUser = new User();
         newUser.setEmail(dto.getEmail());
-        newUser.setPassword(dto.getPassword());
+        newUser.setPassword(passwordEncoder.encode(dto.getPassword()));
         newUser.setName(dto.getName());
         newUser.setHousehold(household);
         newUser.setPrimary(true);

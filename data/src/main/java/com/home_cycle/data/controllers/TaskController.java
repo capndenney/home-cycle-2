@@ -18,7 +18,7 @@ import java.time.Instant;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/tasks")
+@RequestMapping("/api/")
 public class TaskController {
 
     @Autowired
@@ -80,12 +80,15 @@ public class TaskController {
 
     // Update task completion status
     @PutMapping("/{id}/complete")
-    public ResponseEntity<?> completeTask(@PathVariable int id, @RequestParam User userId) {
+    public ResponseEntity<?> completeTask(@PathVariable int id, @RequestParam int userId) {
+
+        User user = userRepository.findById(userId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+
         return taskRepository.findById(id)
                 .map(task -> {
                     task.setCompleted(true);
                     task.setCompletedAt(Instant.now());
-                    task.setCompletedBy(userId);
+                    task.setCompletedBy(user);
                     Task updatedTask = taskRepository.save(task);
                     return ResponseEntity.ok(updatedTask);
                 })

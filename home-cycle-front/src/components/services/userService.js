@@ -1,7 +1,15 @@
 import { api } from "./axiosService";
 
 export const userService = {
-    // TODO: Add endpoint for current logged in user
+    // Authentication Methods
+    login: async (credentials) => {
+        const response = await api.post('login', credentials);
+        return response.data;
+    },
+    register: async (userDto) => api.post('register', userDto),
+
+    // CRUD methods
+    getMe: () => api.get('users/me'),
     create: async (userDto) => api.post('users/new', userDto),
     getUser: (userId) => api.get(`users/${userId}`),
     updateUser: (userId, userData) => api.put(`users/${userId}`, userData),

@@ -22,7 +22,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api")
 public class AuthController {
 
     private final ModelMapper modelMapper;
@@ -39,14 +39,6 @@ public class AuthController {
         this.jwtTokenUtil = jwtTokenUtil;
         this.userDetailsService = userDetailsService;
         this.tokenBlacklistService = tokenBlacklistService;
-    }
-
-    @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/register")
-    public UserResponseDTO createUserProfile(@Valid @RequestBody UserRequestDTO userRequest) {
-        UserDTO userDTO = mapToUserProfileDTO(userRequest);
-        userDTO = userProfileService.createNewUser(userDTO);
-        return mapToUserResponse(userDTO);
     }
 
     @PostMapping("/login")

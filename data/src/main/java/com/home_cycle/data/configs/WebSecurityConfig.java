@@ -29,6 +29,7 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.POST, "/api/users/new").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/household/new").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/register").permitAll()
                         .requestMatchers(HttpMethod.GET,"/**").permitAll()
                         .requestMatchers(HttpMethod.DELETE, "/tasks/**").hasRole("ADMIN")
