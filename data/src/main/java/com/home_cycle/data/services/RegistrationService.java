@@ -11,6 +11,8 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+
 @Service
 public class RegistrationService {
 
@@ -30,13 +32,13 @@ public class RegistrationService {
         newUser.setName(dto.getName());
         newUser.setHousehold(household);
         newUser.setPrimary(true);
-        newUser.setCreatedAt(System.currentTimeMillis());
+        newUser.setCreatedAt(Instant.now());
         newUser = userRepository.save(newUser);
 
         household.setPrimaryUser(newUser);
         household.setCreatedBy(newUser);
         household.addUser(newUser);
-        household.setCreatedAt(System.currentTimeMillis());
+        household.setCreatedAt(Instant.now());
         householdRepository.save(household);
 
         return dataMapping.toHouseholdDTO(household);

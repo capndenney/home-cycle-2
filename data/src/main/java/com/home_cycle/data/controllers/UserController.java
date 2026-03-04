@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Instant;
+
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -32,7 +34,7 @@ public class UserController {
         newUser.setEmail(userDTO.getEmail());
         newUser.setPassword(userDTO.getPassword());
         newUser.setName(userDTO.getName());
-        newUser.setCreatedAt(System.currentTimeMillis());
+        newUser.setCreatedAt(Instant.now());
         User savedUser = userRepository.save(newUser);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
     }

@@ -9,6 +9,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
@@ -25,11 +27,11 @@ public class Task {
     @JoinColumn(name="household", nullable = false)
     @JsonBackReference
     private Household household;
-    private long dueDate; // TODO: Confirm correct data type for date
+    private LocalDate dueDate;
     private boolean completed;
     @UpdateTimestamp
-    private Timestamp completedAt; // TODO: Confirm correct data type for date
-    private int recurrence; // TODO: Date type definition
+    private Instant completedAt;
+    private int recurrence; // For my date math, I am simply using "plusDays", so int will suffice.
     @ManyToOne
     @JoinColumn(name="completed_by")
     private User completedBy;
@@ -38,6 +40,6 @@ public class Task {
     private User createdBy;
     @Column(updatable = false)
     @CreationTimestamp
-    private Timestamp createdAt;
+    private Instant createdAt;
 
 }

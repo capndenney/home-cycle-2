@@ -14,6 +14,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.Instant;
 import java.util.List;
 
 @RestController
@@ -56,8 +57,6 @@ public class TaskController {
         task.setHousehold(household);
         task.setDueDate(taskDTO.getDueDate());
         task.setCompleted(taskDTO.isCompleted());
-        task.setCreatedAt(System.currentTimeMillis());
-        task.setCompletedAt(taskDTO.getCompletedAt());
         task.setRecurrence(taskDTO.getRecurrence()); // TODO: use plusDays for date math
         task.setCreatedBy(user);
         Task savedTask = taskRepository.save(task);
@@ -85,7 +84,7 @@ public class TaskController {
         return taskRepository.findById(id)
                 .map(task -> {
                     task.setCompleted(true);
-                    task.setCompletedAt(System.currentTimeMillis());
+                    task.setCompletedAt(Instant.now());
                     task.setCompletedBy(userId);
                     Task updatedTask = taskRepository.save(task);
                     return ResponseEntity.ok(updatedTask);

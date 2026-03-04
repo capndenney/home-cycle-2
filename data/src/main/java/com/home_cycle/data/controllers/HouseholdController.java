@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Instant;
+
 @RestController
 @RequestMapping("/household")
 public class HouseholdController {
@@ -35,7 +37,7 @@ public class HouseholdController {
         household.setNotes(householdDTO.getNotes());
         household.setTasks(householdDTO.getTasks());
         household.setUsers(householdDTO.getUsers());
-        household.setCreatedAt(System.currentTimeMillis());
+        household.setCreatedAt(Instant.now());
         Household savedHousehold = householdRepository.save(household);
         return ResponseEntity.ok(savedHousehold);
     }
