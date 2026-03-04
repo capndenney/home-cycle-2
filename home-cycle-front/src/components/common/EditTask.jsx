@@ -4,41 +4,42 @@ import Button from "./Button";
 import { DayPicker } from "react-day-picker";
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router";
+import { taskService } from "../services/taskService";
+
+// TODO: Add field for recurrence tracking
 
 const EditTask = ({ saveTask, tasks }) => {
   const { id } = useParams();
 
-  const newTaskId =
-    tasks.reduce((max, t) => {
-      return t.taskId > max ? t.taskId : max;
-    }, 0) + 1;
+  // TODO: Delete when tied in to back end. 
+  // const newTaskId =
+  //   tasks.reduce((max, t) => {
+  //     return t.taskId > max ? t.taskId : max;
+  //   }, 0) + 1;
 
-  const taskNum = id ? Number(id) : newTaskId;
-  const loadTask = tasks.find((t) => t.taskId === taskNum);
+  const loadTask = id ? tasks.find((t) => t.id === Number(id)) : null;
 
   const getInitialTaskData = () => {
     if (loadTask) {
-      const loadedDate = new Date(loadTask.dueDate);
-
       return {
         title: loadTask.title || "",
-        taskId: loadTask.taskId || newTaskId,
+        id: loadTask.id,
         description: loadTask.description || "",
         completed: loadTask.completed || false,
-        dueDate: loadedDate || null,
+        dueDate: loadTask.dueDate ? new Date(loadTask.dueDate) : null
       };
-    } else {
+    }
       return {
         title: "",
-        taskId: newTaskId,
+        id: null,
         description: "",
         completed: false,
         dueDate: null,
       };
-    }
+  
   };
 
-  const initialTaskData = getInitialTaskData();
+  // const initialTaskData = getInitialTaskData(); // TODO: Delete where Sample data is being pulled.
 
   const [loadedTaskData] = useState(initialTaskData);
   const [descData, setDescData] = useState(initialTaskData.description);
@@ -60,23 +61,43 @@ const EditTask = ({ saveTask, tasks }) => {
 
   const navigate = useNavigate();
 
-  const handleSave = (e) => {
+  const handleSave = async (e) => {
     e.preventDefault();
-    const dateForSave = dueData ? dueData.toISOString() : null;
+    const dateForSave = dueData ? dueData.toISOString().split('T')[0] : null;
 
-    const editedTask = {
-      taskId: loadedTaskData.taskId,
+    const taskDto = {
+      // taskId: loadedTaskData.taskId, TODO: Remove, this is not in the DTO.
       title: titleData,
       description: descData,
       dueDate: dateForSave,
-      createdDate: new Date(),
+      // createdDate: new Date(), TODO: Remove, this is being done on the back end.
       completed: compData,
+      householdId: 1, // TODO: Replace with automated data later
+      createdBy: 2, // TODO: Replace with automated data later
+      recurrence: 0 // TODO: Tie in to recurrence field when added
     };
 
-    saveTask(editedTask);
-    setTimeout(() => {
-      navigate(`/task/${loadedTaskData.taskId}`);
-    });
+    try {
+      let savedTask;
+      if (id) {
+        // Update when id exists
+        const response = await taskService.updateTask(id, taskDto);
+        savedTask = response.data;
+      } else {
+        // Create when no id exists
+        const response = await taskService.create(taskDto);
+        savedTask = response.data;
+      }
+      navigate(`/task/${savedTask.id}`);
+    } catch (er) {
+      console.error("Error saving task:", er);
+      // TODO: If time, add in error handling to display message to user on failure.
+    }
+
+    saveTask(taskDto);
+    // setTimeout(() => {
+    //   navigate(`/task/${loadedTaskData.taskId}`);
+    // });
   };
 
   const handleCancel = (e) => {

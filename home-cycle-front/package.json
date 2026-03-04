@@ -1,6 +1,6 @@
 {
   "name": "home-cycle",
-  "homepage" : "http://capndenney.github.io/home-cycle",
+  "homepage": "http://capndenney.github.io/home-cycle",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -13,6 +13,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "axios": "^1.13.6",
     "react": "^19.1.1",
     "react-datepicker": "^8.8.0",
     "react-day-picker": "^9.11.1",
