@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +25,7 @@ public class Household {
     private User createdBy;
     @Column(updatable = false)
     @CreationTimestamp
-    private Timestamp createdAt;
+    private Instant createdAt;
     @OneToMany(mappedBy = "household", cascade = CascadeType.ALL)
     private List<User> users = new ArrayList<>();
     @OneToOne

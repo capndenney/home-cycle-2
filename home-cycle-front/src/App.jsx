@@ -5,21 +5,21 @@ import Home from "./components/pages/Home.jsx";
 import About from "./components/pages/About.jsx";
 import ViewTask from "./components/pages/ViewTask.jsx";
 import EditTask from "./components/common/EditTask.jsx";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./Index.css";
 import "react-day-picker/style.css";
 import LogIn from "./components/pages/LogIn.jsx";
-import sampleTasks from "./sampleData/sampleTasks.js";
+import { taskService } from "./components/services/taskService.js";
 
 function App() {
   const [logInStatus, setLogInStatus] = useState(false); 
-  const [taskArray, setTaskArray] = useState(sampleTasks);
+  const [taskArray, setTaskArray] = useState([]);
   const [clicked, setClicked] = useState(0);
 
   const saveTask = (updatedTask) => {
     setTaskArray((curArray) => {
       const taskIndex = curArray.findIndex(
-        (t) => t.taskId === updatedTask.taskId,
+        (t) => t.id === updatedTask.id,
       );
 
       if (taskIndex !== -1) {
@@ -32,6 +32,21 @@ function App() {
     });
   };
 
+  // API Task Load
+  useEffect(() => {
+    const fetchAllTasks = async () => {
+      try {
+        const response = await taskService.getTasks();
+        setTaskArray(response.data);
+      } catch (er) {
+        console.error("Error fetching tasks:", er);
+        // TODO: Add error handling UI
+      }
+    };
+    fetchAllTasks();
+  }, []);
+
+  // Page Layout and routing
   return (
     <>
       <Router id="main-content">

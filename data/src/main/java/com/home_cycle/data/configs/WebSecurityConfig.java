@@ -27,6 +27,10 @@ public class WebSecurityConfig {
         return httpSecurity.csrf(csrf -> csrf.disable())
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(HttpMethod.POST, "/api/users/new").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/household/new").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/login").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/register").permitAll()
                         .requestMatchers(HttpMethod.GET,"/**").permitAll()
                         .requestMatchers(HttpMethod.DELETE, "/tasks/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST,"/**").hasRole("ADMIN")
