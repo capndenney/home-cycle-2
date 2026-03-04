@@ -1,34 +1,31 @@
 import Button from "../common/Button";
 import Input from "../common/forms/Input";
 import { useState } from "react";
-import sampleUsers from "../../sampleData/sampleUsers";
+import { userService } from "../services/userService";
 
 const LogIn = ({ setLogInStatus, clicked, setClicked }) => {
-  const credentialFormat = { username: "", password: "" };
+  const credentialFormat = { email: "", password: "" };
   const [creds, setCreds] = useState(credentialFormat);
-
-  function validateLogin(inputUsername, inputPassword) {
-    return sampleUsers.some((credentials) => {
-      return (
-        credentials.username === inputUsername &&
-        credentials.password === inputPassword
-      );
-    });
-  }
 
   const handleChange = (e) => {
     const { id, value } = e.target;
     setCreds((oldData) => ({ ...oldData, [id]: value }));
   };
 
-  const handleClick = (e) => {
+  const handleClick = async (e) => {
     e.preventDefault();
-    if (validateLogin(creds.username, creds.password)) {
+    try {
+      const response = await userService.login(creds);
+      localStorage.setItem("user_token", response.token);
+      localStorage.setItem("email", response.email);
+      localStorage.setItem("userId", response.userId);
+      localStorage.setItem("householdId", response.householdId);
       setLogInStatus(true);
-    } else {
-      setClicked((clicked) => clicked + 1);
+    } catch (er) {
+      console.error("Login failed:", er);
+      setClicked((prev) => prev + 1);
     }
-  };
+  }
 
   return (
     <>
@@ -37,9 +34,9 @@ const LogIn = ({ setLogInStatus, clicked, setClicked }) => {
         {clicked > 0 && <h4 className="invalid">Invalid Credentials!</h4>}
 
         <Input
-          label="Username:"
-          value={creds.username}
-          id="username"
+          label="Email:"
+          value={creds.email}
+          id="email"
           handleChange={handleChange}
         />
         <Input

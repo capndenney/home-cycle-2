@@ -6,6 +6,8 @@ export const userService = {
         const response = await api.post('login', credentials);
         return response.data;
     },
+
+    // Matching Registration Service from back end
     register: async (userDto) => api.post('register', userDto),
 
     // CRUD methods
