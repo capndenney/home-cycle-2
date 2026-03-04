@@ -6,6 +6,7 @@ import com.home_cycle.data.dto.request.UserDTO;
 import com.home_cycle.data.dto.request.UserRequestDTO;
 import com.home_cycle.data.dto.response.AuthResponseDTO;
 import com.home_cycle.data.dto.response.UserResponseDTO;
+import com.home_cycle.data.models.User;
 import com.home_cycle.data.services.CustomUserDetailsService;
 import com.home_cycle.data.services.TokenBlacklistService;
 import com.home_cycle.data.services.UserService;
@@ -44,9 +45,10 @@ public class AuthController {
     @PostMapping("/login")
     public AuthResponseDTO authenticateUserProfile(@RequestBody AuthRequestDTO authRequest) throws Exception {
         authenticate(authRequest);
+        User user = userProfileService.findByEmail(authRequest.getEmail());
         final UserDetails userDetails = userDetailsService.loadUserByUsername(authRequest.getEmail());
         final String token = jwtTokenUtil.generateToken(userDetails);
-        return new AuthResponseDTO(token, authRequest.getEmail());
+        return new AuthResponseDTO(token, user.getEmail(), user.getId(), user.getHousehold() != null ? user.getHousehold().getId() : null);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
