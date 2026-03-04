@@ -2,6 +2,9 @@ package com.home_cycle.data.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.sql.Timestamp;
 
 @Entity
 @Table(name="users")
@@ -14,7 +17,9 @@ public class User {
     @JsonBackReference
     private Household household;
     private String name;
-    private long createdAt; // TODO: Confirm correct data type for date
+    @Column(updatable = false)
+    @CreationTimestamp
+    private Timestamp createdAt; // TODO: Confirm correct data type for date
     @Column(unique = true)
     private String email;
     private String password; // TODO: Password encryption or hashing?
@@ -23,7 +28,7 @@ public class User {
     public User() {
     }
 
-    public User(int id, Household household, String name, long createdAt, String email, String password, boolean isPrimary) {
+    public User(int id, Household household, String name, Timestamp createdAt, String email, String password, boolean isPrimary) {
         this.id = id;
         this.household = household;
         this.createdAt = createdAt;
@@ -49,11 +54,11 @@ public class User {
         this.household = household;
     }
 
-    public long getCreatedAt() {
+    public Timestamp getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(long createdAt) {
+    public void setCreatedAt(Timestamp createdAt) {
         this.createdAt = createdAt;
     }
 

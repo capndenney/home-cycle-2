@@ -5,6 +5,10 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.sql.Timestamp;
 
 @Data
 @NoArgsConstructor
@@ -23,7 +27,8 @@ public class Task {
     private Household household;
     private long dueDate; // TODO: Confirm correct data type for date
     private boolean completed;
-    private long completedAt; // TODO: Confirm correct data type for date
+    @UpdateTimestamp
+    private Timestamp completedAt; // TODO: Confirm correct data type for date
     private int recurrence; // TODO: Date type definition
     @ManyToOne
     @JoinColumn(name="completed_by")
@@ -31,6 +36,8 @@ public class Task {
     @ManyToOne
     @JoinColumn(name="created_by", nullable = false)
     private User createdBy;
-    private long createdAt;
+    @Column(updatable = false)
+    @CreationTimestamp
+    private Timestamp createdAt;
 
 }
