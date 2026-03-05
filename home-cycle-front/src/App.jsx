@@ -11,9 +11,10 @@ import "react-day-picker/style.css";
 import LogIn from "./components/pages/LogIn.jsx";
 import { taskService } from "./components/services/taskService.js";
 import { userService } from "./components/services/userService.js";
-import { useNavigate as navigate }  from "react-router";
+import { useNavigate }  from "react-router";
 
 function App() {
+  const navigate = useNavigate();
   const [logInStatus, setLogInStatus] = useState(!!localStorage.getItem("user_token")); 
   const [taskArray, setTaskArray] = useState([]);
   const [clicked, setClicked] = useState(0);
@@ -76,7 +77,6 @@ function App() {
   // Page Layout and routing
   return (
     <>
-      <Router id="main-content">
         <Header
           logInStatus={logInStatus}
           handleLogout={handleLogout}
@@ -124,7 +124,6 @@ function App() {
           </Routes>
         )}
         <Footer />
-      </Router>
     </>
   );
 }
