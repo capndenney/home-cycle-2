@@ -7,6 +7,7 @@ import com.home_cycle.data.models.User;
 import com.home_cycle.data.repositories.HouseholdRepository;
 import com.home_cycle.data.repositories.TaskRepository;
 import com.home_cycle.data.repositories.UserRepository;
+import com.home_cycle.data.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.security.Principal;
 import java.time.Instant;
 import java.util.List;
 
@@ -30,11 +32,18 @@ public class TaskController {
     @Autowired
     private HouseholdRepository householdRepository;
 
+    @Autowired
+    private UserService userService;
+
     // Get all tasks
     @GetMapping("")
-    public ResponseEntity<?> getAllTasks() {
-        List<Task> allTasks = taskRepository.findAll();
-        return ResponseEntity.ok(allTasks);
+    public ResponseEntity<?> getAllTasks(Principal principal) {
+        User user = userService.findByEmail(principal.getName());
+        List<Task> filteredTasks = taskRepository.findByHouseholdIdOrCreatorId(
+                user.getHousehold() != null ? user.getHousehold().getId() : null,
+                user.getId()
+        );
+        return ResponseEntity.ok(filteredTasks);
     }
 
     // Get specific task by id
