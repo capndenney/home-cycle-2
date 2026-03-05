@@ -39,7 +39,7 @@ public class TaskController {
     @GetMapping("")
     public ResponseEntity<?> getAllTasks(Principal principal) {
         User user = userService.findByEmail(principal.getName());
-        List<Task> filteredTasks = taskRepository.findByHouseholdIdOrCreatorId(
+        List<Task> filteredTasks = taskRepository.findByHouseholdIdOrCreatedBy_Id(
                 user.getHousehold() != null ? user.getHousehold().getId() : null,
                 user.getId()
         );
@@ -89,7 +89,7 @@ public class TaskController {
 
     // Update task completion status
     @PutMapping("/{id}/complete")
-    public ResponseEntity<?> completeTask(@PathVariable int id, @RequestParam int userId) {
+    public ResponseEntity<?> completeTask(@PathVariable int id, @RequestBody int userId) {
 
         User user = userRepository.findById(userId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
 
@@ -98,6 +98,16 @@ public class TaskController {
                     task.setCompleted(true);
                     task.setCompletedAt(Instant.now());
                     task.setCompletedBy(user);
+                    if (task.getRecurrence() > 0) {
+                        Task nextTask = new Task();
+                        nextTask.setTitle(task.getTitle());
+                        nextTask.setDescription(task.getDescription());
+                        nextTask.setHousehold(task.getHousehold());
+                        nextTask.setCreatedBy(task.getCreatedBy());
+                        nextTask.setDueDate(task.getDueDate().plusDays(task.getRecurrence()));
+                        nextTask.setRecurrence(task.getRecurrence());
+                        taskRepository.save(nextTask);
+                    }
                     Task updatedTask = taskRepository.save(task);
                     return ResponseEntity.ok(updatedTask);
                 })
