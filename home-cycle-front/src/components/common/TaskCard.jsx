@@ -1,6 +1,7 @@
 import Card from "./Card";
 import Button from "./Button";
 import { useNavigate } from "react-router";
+import { taskService } from "../services/taskService";
 
 const TaskCard = ({
   saveTask,
@@ -9,21 +10,19 @@ const TaskCard = ({
   description,
   dueDate,
   completed,
+  triggerRefresh
 }) => {
   const loadedId = taskId;
   const loadedDate = new Date(dueDate);
   const formattedDate = loadedDate.toLocaleDateString();
   const navigate = useNavigate();
   const handleEditButton = () => navigate(`/task/${loadedId}/edit`);
-  const handleComplete = () => {
-    const updatedTask = {
-      taskId: loadedId,
-      title: title ,
-      description: description,
-      dueDate: dueDate,
-      completed: true,
-    };
-    saveTask(updatedTask);
+  const handleComplete = async (e) => {
+    e.preventDefault();
+    const completingUser = localStorage.getItem("userId");
+    const completedTask = await taskService.completeTask(loadedId, Number(completingUser));
+    saveTask(completedTask.data);
+    triggerRefresh();
   };
 
   return (

@@ -6,6 +6,9 @@ export const userService = {
         const response = await api.post('login', credentials);
         return response.data;
     },
+    logout: async () => {
+        return await api.post('logout')
+    },
 
     // Matching Registration Service from back end
     register: async (userDto) => api.post('register', userDto),

@@ -17,6 +17,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -77,10 +78,25 @@ public class TaskController {
     public ResponseEntity<?> updateTask(@PathVariable int id, @Validated @RequestBody TaskDTO taskDTO) {
         return taskRepository.findById(id)
                 .map(existingTask -> {
+
+                    boolean wasNotDone = !existingTask.isCompleted();
+                    boolean isDoneNow = taskDTO.isCompleted();
+
                     existingTask.setTitle(taskDTO.getTitle());
                     existingTask.setDescription(taskDTO.getDescription());
                     existingTask.setDueDate(taskDTO.getDueDate());
                     existingTask.setRecurrence(taskDTO.getRecurrence());
+                    existingTask.setCompleted(taskDTO.getCompleted());
+                    if (wasNotDone && isDoneNow && existingTask.getRecurrence() > 0) {
+                        Task nextTask = new Task();
+                        nextTask.setTitle(existingTask.getTitle());
+                        nextTask.setDescription(existingTask.getDescription());
+                        nextTask.setHousehold(existingTask.getHousehold());
+                        nextTask.setCreatedBy(existingTask.getCreatedBy());
+                        nextTask.setDueDate(LocalDate.now().plusDays(existingTask.getRecurrence()));
+                        nextTask.setRecurrence(existingTask.getRecurrence());
+                        taskRepository.save(nextTask);
+                    }
                     Task updatedTask = taskRepository.save(existingTask);
                     return ResponseEntity.ok(updatedTask);
                 })
@@ -104,7 +120,7 @@ public class TaskController {
                         nextTask.setDescription(task.getDescription());
                         nextTask.setHousehold(task.getHousehold());
                         nextTask.setCreatedBy(task.getCreatedBy());
-                        nextTask.setDueDate(task.getDueDate().plusDays(task.getRecurrence()));
+                        nextTask.setDueDate(LocalDate.now().plusDays(task.getRecurrence()));
                         nextTask.setRecurrence(task.getRecurrence());
                         taskRepository.save(nextTask);
                     }

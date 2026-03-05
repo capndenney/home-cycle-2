@@ -10,11 +10,14 @@ import "./Index.css";
 import "react-day-picker/style.css";
 import LogIn from "./components/pages/LogIn.jsx";
 import { taskService } from "./components/services/taskService.js";
+import { userService } from "./components/services/userService.js";
+import { useNavigate as navigate }  from "react-router";
 
 function App() {
-  const [logInStatus, setLogInStatus] = useState(false); 
+  const [logInStatus, setLogInStatus] = useState(!!localStorage.getItem("user_token")); 
   const [taskArray, setTaskArray] = useState([]);
   const [clicked, setClicked] = useState(0);
+  const [refreshToggle, setRefreshToggle] = useState(false);
 
   const saveTask = (updatedTask) => {
     setTaskArray((curArray) => {
@@ -32,19 +35,43 @@ function App() {
     });
   };
 
+  // handle logout
+  const handleLogout = async () => {
+    try {
+      await userService.logout();
+    } catch (er) {
+      console.error("Server-side logout failed:", er);
+    } finally {
+      localStorage.clear();
+      setLogInStatus(false);
+      setTaskArray([]);
+      navigate("/login")
+    }
+  };
+
+  // Task Exclusion from state (after delete sent to API)
+  const removeTaskFromState = (id) => {
+    setTaskArray((curArray) => {
+      return curArray.filter((t) => t.id !== id);
+    });
+  };
+
+  const fetchAllTasks = async () => {
+    try {
+      const response = await taskService.getTasks();
+      setTaskArray(response.data);
+    } catch (er) {
+      console.error("Error fetching tasks:", er);
+      // TODO: Add error handling UI
+    }
+  };
+
+  const refreshTasks = () => setRefreshToggle((prev) => !prev);
+
   // API Task Load
   useEffect(() => {
-    const fetchAllTasks = async () => {
-      try {
-        const response = await taskService.getTasks();
-        setTaskArray(response.data);
-      } catch (er) {
-        console.error("Error fetching tasks:", er);
-        // TODO: Add error handling UI
-      }
-    };
     fetchAllTasks();
-  }, [logInStatus]);
+  }, [logInStatus, refreshToggle]);
 
   // Page Layout and routing
   return (
@@ -52,28 +79,27 @@ function App() {
       <Router id="main-content">
         <Header
           logInStatus={logInStatus}
-          setLogInStatus={setLogInStatus}
-          setClicked={setClicked}
+          handleLogout={handleLogout}
           clicked={clicked}
         />
         {logInStatus ? (
           <Routes>
             <Route
               path="/"
-              element={<Home taskArray={taskArray} saveTask={saveTask} />}
+              element={<Home taskArray={taskArray} saveTask={saveTask} triggerRefresh={refreshTasks}/>}
             />
             <Route path="/about" element={<About />} />
             <Route
               path="/task/:id"
-              element={<ViewTask taskArray={taskArray} saveTask={saveTask} />}
+              element={<ViewTask taskArray={taskArray} saveTask={saveTask} triggerRefresh={refreshTasks}/>}
             />
             <Route
               path="/task/:id/edit"
-              element={<EditTask tasks={taskArray} saveTask={saveTask} key="edit-task"/>}
+              element={<EditTask tasks={taskArray} saveTask={saveTask} key="edit-task" removeTaskFromState={removeTaskFromState} triggerRefresh={refreshTasks}/>}
             />
             <Route
               path="/newtask"
-              element={<EditTask tasks={taskArray} saveTask={saveTask} key="new-task"/>}
+              element={<EditTask tasks={taskArray} saveTask={saveTask} key="new-task" removeTaskFromState={removeTaskFromState} triggerRefresh={refreshTasks}/>}
             />
             <Route path="*" element={<Home />} />
           </Routes>
