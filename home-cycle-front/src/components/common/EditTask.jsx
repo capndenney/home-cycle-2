@@ -6,31 +6,50 @@ import { useState } from "react";
 import { useParams, useNavigate } from "react-router";
 import { taskService } from "../services/taskService";
 
-// TODO: Add field for recurrence tracking
-
-const EditTask = ({ saveTask, tasks }) => {
+const EditTask = ({ saveTask, tasks, removeTaskFromState, triggerRefresh }) => {
   const { id } = useParams();
 
   const loadTask = id ? tasks.find((t) => t.id === Number(id)) : null;
 
   const getInitialTaskData = () => {
-    if (loadTask) {
+
+    let initialRecur = 0;
+    let initialUnit = 1;
+
+    if (loadTask && loadTask.recurrence > 0) {
+      const total = loadTask.recurrence;
+      if (total % 30 === 0) {
+        initialRecur = total / 30;
+        initialUnit = 30;
+      } else if (total % 7 === 0) {
+        initialRecur = total / 7;
+        initialUnit = 7;
+      } else {
+        initialRecur = total;
+        initialUnit = 1;
+      }
+    }
+
+   if (loadTask) {
       return {
         title: loadTask.title || "",
         id: loadTask.id,
         description: loadTask.description || "",
         completed: loadTask.completed || false,
-        dueDate: loadTask.dueDate ? new Date(loadTask.dueDate) : null
+        dueDate: loadTask.dueDate ? new Date(loadTask.dueDate) : null,
+        recurrence: initialRecur,
+        unit: initialUnit,
       };
     }
-      return {
-        title: "",
-        id: null,
-        description: "",
-        completed: false,
-        dueDate: null,
-      };
-  
+    return {
+      title: "",
+      id: null,
+      description: "",
+      completed: false,
+      dueDate: null,
+      recurrence: 0,
+      unit: 1,
+    };
   };
 
   const initialTaskData = getInitialTaskData();
@@ -40,6 +59,8 @@ const EditTask = ({ saveTask, tasks }) => {
   const [compData, setCompData] = useState(initialTaskData.completed);
   const [titleData, setTitleData] = useState(initialTaskData.title);
   const [dueData, setDueData] = useState(initialTaskData.dueDate);
+  const [recurData, setRecurData] = useState(initialTaskData.recurrence);
+  const [unitData, setUnitData] = useState(initialTaskData.unit);
 
   const titleChange = (e) => {
     setTitleData(e.target.value);
@@ -60,15 +81,13 @@ const EditTask = ({ saveTask, tasks }) => {
     const dateForSave = dueData ? dueData.toISOString().split('T')[0] : null;
 
     const taskDto = {
-      // taskId: loadedTaskData.taskId, TODO: Remove, this is not in the DTO.
       title: titleData,
       description: descData,
       dueDate: dateForSave,
-      // createdDate: new Date(), TODO: Remove, this is being done on the back end.
       completed: compData,
-      householdId: 1, // TODO: Replace with automated data later
-      createdBy: 2, // TODO: Replace with automated data later
-      recurrence: 0 // TODO: Tie in to recurrence field when added
+      householdId: localStorage.getItem("householdId") ? Number(localStorage.getItem("householdId")) : null,
+      createdBy: Number(localStorage.getItem("userId")),
+      recurrence: Number(recurData) * Number(unitData)
     };
 
     try {
@@ -76,17 +95,21 @@ const EditTask = ({ saveTask, tasks }) => {
       if (id) {
         // Update when id exists
         const response = await taskService.updateTask(id, taskDto);
+        // check: if task service updates in future, may not need response.data, just response.
         savedTask = response.data;
         saveTask(savedTask);
       } else {
         // Create when no id exists
         const response = await taskService.create(taskDto);
+        //
         savedTask = response.data;
         saveTask(savedTask);
       }
-      navigate(`/task/${savedTask.id}`);
+      triggerRefresh();
+      navigate(`/`);
     } catch (er) {
       console.error("Error saving task:", er);
+      triggerRefresh();
       // TODO: If time, add in error handling to display message to user on failure.
     }
   };
@@ -97,6 +120,19 @@ const EditTask = ({ saveTask, tasks }) => {
     setCompData(loadedTaskData.completed);
     setTitleData(loadedTaskData.title);
     setDueData(loadedTaskData.dueDate);
+  };
+
+  const handleDelete = async (e) => {
+    e.preventDefault();
+    if (id && window.confirm("Are you sure you want to delete this task?")) {
+      try {
+        await taskService.deleteTask(id);
+        removeTaskFromState(Number(id));
+        navigate("/");
+      } catch (er) {
+        console.error("Error deleting task:", er);
+      }
+    }
   };
 
   return (
@@ -121,6 +157,20 @@ const EditTask = ({ saveTask, tasks }) => {
         label="Completed:"
         handleChange={handleCheck}
       />
+      <Input
+        type="number"
+        value={recurData}
+        label="Recurrence:"
+        handleChange={(e) => setRecurData(e.target.value)}
+      />
+      <select
+        value={unitData}
+        onChange={(e) => setUnitData(e.target.value)}
+      >
+        <option value={1}>Days</option>
+        <option value={7}>Weeks</option>
+        <option value={30}>Months</option>
+      </select>
       <h4>Due Date:</h4>
       <DayPicker
         mode="single"
@@ -134,6 +184,7 @@ const EditTask = ({ saveTask, tasks }) => {
       />
       <Button label="Save" handleClick={handleSave}/>
       <Button label="Cancel" handleClick={handleCancel}/>
+      <Button label="Delete" handleClick={handleDelete} classes="btn-danger"/>
     </Card>
   );
 };

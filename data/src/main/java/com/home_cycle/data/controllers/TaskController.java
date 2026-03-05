@@ -17,6 +17,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -39,7 +40,7 @@ public class TaskController {
     @GetMapping("")
     public ResponseEntity<?> getAllTasks(Principal principal) {
         User user = userService.findByEmail(principal.getName());
-        List<Task> filteredTasks = taskRepository.findByHouseholdIdOrCreatorId(
+        List<Task> filteredTasks = taskRepository.findByHouseholdIdOrCreatedBy_Id(
                 user.getHousehold() != null ? user.getHousehold().getId() : null,
                 user.getId()
         );
@@ -77,10 +78,25 @@ public class TaskController {
     public ResponseEntity<?> updateTask(@PathVariable int id, @Validated @RequestBody TaskDTO taskDTO) {
         return taskRepository.findById(id)
                 .map(existingTask -> {
+
+                    boolean wasNotDone = !existingTask.isCompleted();
+                    boolean isDoneNow = taskDTO.isCompleted();
+
                     existingTask.setTitle(taskDTO.getTitle());
                     existingTask.setDescription(taskDTO.getDescription());
                     existingTask.setDueDate(taskDTO.getDueDate());
                     existingTask.setRecurrence(taskDTO.getRecurrence());
+                    existingTask.setCompleted(taskDTO.getCompleted());
+                    if (wasNotDone && isDoneNow && existingTask.getRecurrence() > 0) {
+                        Task nextTask = new Task();
+                        nextTask.setTitle(existingTask.getTitle());
+                        nextTask.setDescription(existingTask.getDescription());
+                        nextTask.setHousehold(existingTask.getHousehold());
+                        nextTask.setCreatedBy(existingTask.getCreatedBy());
+                        nextTask.setDueDate(LocalDate.now().plusDays(existingTask.getRecurrence()));
+                        nextTask.setRecurrence(existingTask.getRecurrence());
+                        taskRepository.save(nextTask);
+                    }
                     Task updatedTask = taskRepository.save(existingTask);
                     return ResponseEntity.ok(updatedTask);
                 })
@@ -89,7 +105,7 @@ public class TaskController {
 
     // Update task completion status
     @PutMapping("/{id}/complete")
-    public ResponseEntity<?> completeTask(@PathVariable int id, @RequestParam int userId) {
+    public ResponseEntity<?> completeTask(@PathVariable int id, @RequestBody int userId) {
 
         User user = userRepository.findById(userId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
 
@@ -98,6 +114,16 @@ public class TaskController {
                     task.setCompleted(true);
                     task.setCompletedAt(Instant.now());
                     task.setCompletedBy(user);
+                    if (task.getRecurrence() > 0) {
+                        Task nextTask = new Task();
+                        nextTask.setTitle(task.getTitle());
+                        nextTask.setDescription(task.getDescription());
+                        nextTask.setHousehold(task.getHousehold());
+                        nextTask.setCreatedBy(task.getCreatedBy());
+                        nextTask.setDueDate(LocalDate.now().plusDays(task.getRecurrence()));
+                        nextTask.setRecurrence(task.getRecurrence());
+                        taskRepository.save(nextTask);
+                    }
                     Task updatedTask = taskRepository.save(task);
                     return ResponseEntity.ok(updatedTask);
                 })

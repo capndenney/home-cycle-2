@@ -1,16 +1,17 @@
 import TaskCard from "../common/TaskCard.JSX";
 
-const TasksSection = ({ taskArray, saveTask }) => {
+const TasksSection = ({ taskArray, saveTask, triggerRefresh }) => {
   const tasksJSX = [...taskArray].map((task) => {
     return (
       <TaskCard
-        key={task.taskId}
-        taskId={task.taskId}
+        key={task.id}
+        taskId={task.id}
         title={task.title}
         description={task.description}
         dueDate={task.dueDate}
         completed={task.completed}
         saveTask={saveTask}
+        triggerRefresh={triggerRefresh}
       />
     );
   });

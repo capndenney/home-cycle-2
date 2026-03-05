@@ -1,12 +1,7 @@
 import { Link } from "react-router";
 import Button from "../common/Button";
 
-const Nav = ({ logInStatus, setLogInStatus, setClicked }) => {
-
-  const handleLogout = () => {
-    setLogInStatus(false);
-    setClicked(0);
-  };
+const Nav = ({ logInStatus, handleLogout }) => {
 
   return (
     <div className="nav-menu">
