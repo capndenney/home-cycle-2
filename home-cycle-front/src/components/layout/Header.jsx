@@ -1,7 +1,7 @@
 import Nav from "./Nav";
 import logo from "../../assets/home-cycle-logo-test.PNG";
 
-const Header = ({ logInStatus, setLogInStatus, setClicked }) => {
+const Header = ({ logInStatus, setLogInStatus, setClicked, handleLogout }) => {
   return (
     <header className="header">
       <div id="branding">
@@ -16,7 +16,7 @@ const Header = ({ logInStatus, setLogInStatus, setClicked }) => {
         logInStatus={logInStatus}
         setLogInStatus={setLogInStatus}
         setClicked={setClicked}
-
+        handleLogout={handleLogout}
       />
     </header>
   );
