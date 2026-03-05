@@ -44,7 +44,7 @@ function App() {
       }
     };
     fetchAllTasks();
-  }, []);
+  }, [logInStatus]);
 
   // Page Layout and routing
   return (
