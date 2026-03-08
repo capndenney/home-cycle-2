@@ -1,8 +1,10 @@
 package com.home_cycle.data.controllers;
 
+import com.home_cycle.data.dto.request.PasswordDTO;
 import com.home_cycle.data.dto.request.UserRequestDTO;
 import com.home_cycle.data.models.User;
 import com.home_cycle.data.repositories.UserRepository;
+import com.home_cycle.data.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +19,7 @@ public class UserController {
 
     @Autowired
     UserRepository userRepository;
+    @Autowired UserService userService;
 
     // DO NOT add "get all users" for security
     // Get specific user information by ID
@@ -63,4 +66,15 @@ public class UserController {
                 })
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
+
+    @PutMapping("/update-password")
+    public ResponseEntity<?> updatePassword(@RequestBody PasswordDTO passwordDTO, java.security.Principal principal) {
+        boolean success = userService.updatePassword(principal.getName(), passwordDTO);
+        if (success) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Current password incorrect.");
+        }
+    }
+
 }

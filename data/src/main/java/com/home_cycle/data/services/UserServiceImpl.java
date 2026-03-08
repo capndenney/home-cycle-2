@@ -1,5 +1,6 @@
 package com.home_cycle.data.services;
 
+import com.home_cycle.data.dto.request.PasswordDTO;
 import com.home_cycle.data.dto.request.UserDTO;
 import com.home_cycle.data.models.User;
 import com.home_cycle.data.repositories.UserRepository;
@@ -44,5 +45,17 @@ public class UserServiceImpl implements UserService{
 
     private User mapToProfileEntity(UserDTO profileDTO) {
         return modelMapper.map(profileDTO, User.class);
+    }
+
+    @Override
+    public boolean updatePassword(String email, PasswordDTO passwordDTO) {
+        User user = userRepository.findByEmail(email).orElse(null);
+
+        if (user != null && encoder.matches(passwordDTO.getOldPassword(), user.getPassword())) {
+            user.setPassword(encoder.encode(passwordDTO.getNewPassword()));
+            userRepository.save(user);
+            return true;
+        }
+        return false;
     }
 }
