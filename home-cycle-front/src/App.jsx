@@ -5,6 +5,7 @@ import Home from "./components/pages/Home.jsx";
 import About from "./components/pages/About.jsx";
 import ViewTask from "./components/pages/ViewTask.jsx";
 import EditTask from "./components/common/EditTask.jsx";
+import { Profile } from "./components/pages/Profile.jsx";
 import { useEffect, useState } from "react";
 import "./Index.css";
 import "react-day-picker/style.css";
@@ -101,6 +102,7 @@ function App() {
               path="/newtask"
               element={<EditTask tasks={taskArray} saveTask={saveTask} key="new-task" removeTaskFromState={removeTaskFromState} triggerRefresh={refreshTasks}/>}
             />
+            <Route path="/profile" element={<Profile />} />
             <Route path="*" element={<Home />} />
           </Routes>
         ) : (

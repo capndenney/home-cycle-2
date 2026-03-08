@@ -15,6 +15,11 @@ const Nav = ({ logInStatus, handleLogout }) => {
         About
       </Link>
       {logInStatus && (
+        <Link className="link" to="/profile">
+          Profile
+        </Link>
+      )}
+      {logInStatus && (
         <Button
           id="logout"
           label="Log Out"
