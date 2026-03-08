@@ -75,7 +75,6 @@ export const Profile = ({ handleLogout }) => {
     setInputData(savedData);
   };
 
-  // TODO: Add User Delete Account Functionality
   const handleDelete = async (id, e) => {
     e.preventDefault();
     if (id && window.confirm("Are you sure you want to delete your account?")) {

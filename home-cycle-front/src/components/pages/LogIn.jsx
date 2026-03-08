@@ -2,6 +2,7 @@ import Button from "../common/Button";
 import Input from "../common/forms/Input";
 import { useState } from "react";
 import { userService } from "../services/userService";
+import { Link } from "react-router";
 
 const LogIn = ({ setLogInStatus, clicked, setClicked }) => {
   const credentialFormat = { email: "", password: "" };
@@ -47,6 +48,10 @@ const LogIn = ({ setLogInStatus, clicked, setClicked }) => {
           handleChange={handleChange}
         />
         <Button label="Log In" id="log-in-button" handleClick={handleClick} />
+
+        <Link className="link" to="/signup" >
+          Don't have an account? Sign Up!
+        </Link>
       </div>
       <p className="about intro card" id="intro">Home Cycle is the solution to recurring maintenance around the home. As a homeowner, I have lots of small things I have to do every day, week, month and year it seems.  I built this to help me stay organized, and hopefully it does the same for others.</p>
     </>
