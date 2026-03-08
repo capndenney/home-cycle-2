@@ -5,6 +5,7 @@ import Home from "./components/pages/Home.jsx";
 import About from "./components/pages/About.jsx";
 import ViewTask from "./components/pages/ViewTask.jsx";
 import EditTask from "./components/common/EditTask.jsx";
+import SignUp from "./components/pages/SignUp.jsx";
 import { Profile } from "./components/pages/Profile.jsx";
 import { useEffect, useState } from "react";
 import "./Index.css";
@@ -119,6 +120,7 @@ function App() {
               }
             />
             <Route path="/about" element={<About />} />
+            <Route path="/signup" element={<SignUp />}/>
             <Route
               path="*"
               element={<LogIn setLogInStatus={setLogInStatus} />}
