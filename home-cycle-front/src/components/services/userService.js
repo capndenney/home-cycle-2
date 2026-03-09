@@ -13,6 +13,9 @@ export const userService = {
     // Matching Registration Service from back end
     register: async (userDto) => api.post('register', userDto),
 
+    // Password update
+    updatePassword: async(passwordDTO) => api.put(`users/update-password`, passwordDTO),
+
     // CRUD methods
     getMe: () => api.get('users/me'),
     create: async (userDto) => api.post('users/new', userDto),

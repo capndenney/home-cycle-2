@@ -5,11 +5,13 @@ import { hhService } from "../services/hhService";
 import { userService } from "../services/userService";
 import Input from "../common/forms/Input";
 import { useNavigate } from "react-router";
+import { validation } from "../services/validation"
 
 export const Profile = ({ handleLogout }) => {
   const [inputData, setInputData] = useState({ name: "", notes: "" });
   const [savedData, setSavedData] = useState({ name: "", notes: "" });
-  //   const [hhNotes, setHhNotes] = useState(inputData.notes || "");
+  const [passwordForm, setPasswordForm] = useState({currentPassword: "", newPassword: "",confirmPassword: ""})
+  const [passwordErrors, setPasswordErrors] = useState([])
 
   const hhId = localStorage.getItem("householdId");
   const userId = localStorage.getItem("userId");
@@ -75,6 +77,29 @@ export const Profile = ({ handleLogout }) => {
     setInputData(savedData);
   };
 
+  const handlePasswordUpdate = async () => {
+    setPasswordErrors([]);
+    const validate = validation(passwordForm.newPassword, passwordForm.confirmPassword)
+
+    if (!validate.isValid) {
+      setPasswordErrors(validate.errors);
+      return;
+    }
+
+    try {
+      const passwordDTO = {
+        oldPassword: passwordForm.currentPassword,
+        newPassword: passwordForm.newPassword
+      };
+      await userService.updatePassword(passwordDTO);
+      alert("Password Updated!");
+    } catch (er) {
+      setPasswordErrors(er.message)
+    } finally {
+      setPasswordForm({currentPassword: "", newPassword: "",confirmPassword: ""});
+    }
+  }
+
   const handleDelete = async (id, e) => {
     e.preventDefault();
     if (id && window.confirm("Are you sure you want to delete your account?")) {
@@ -100,13 +125,32 @@ export const Profile = ({ handleLogout }) => {
       />
       <p>Email: {localStorage.getItem("email")}</p>
       <h3>Change Password</h3>
-      {/* current password
-            new password
-            confirm new password */}
+      <Input
+        id="currentPassword"
+        label="Current Password"
+        value={passwordForm.currentPassword}
+        type="password"
+        handleChange={handleChange}
+      />
+      <Input
+        id="newPassword"
+        label="New Password"
+        value={passwordForm.newPassword}
+        type="password"
+        handleChange={handleChange}
+      />
+      <Input
+        id="confirmPassword"
+        label="Confirm New Password"
+        value={passwordForm.confirmPassword}
+        type="password"
+        handleChange={handleChange}
+      />
+      {passwordErrors.length > 0 && <p classes="error">{passwordErrors}</p>}
       <Button
         id="update-password"
-        label="Update Profile"
-        handleClick={handleCancel}
+        label="Update Password"
+        handleClick={handlePasswordUpdate}
         classes="button"
       />
       <h2>Household</h2>
@@ -118,7 +162,7 @@ export const Profile = ({ handleLogout }) => {
       />
       <Button
         id="update-household"
-        label="Update Household"
+        label="Update Profile"
         handleClick={handleSave}
         classes="button"
       />
