@@ -7,9 +7,7 @@ import java.util.List;
 
 public class HouseholdDTO {
     private String notes;
-    // TODO: Do we want a list of users in request DTO?
     private List<User> users;
-    // TODO: Do we want a list of tasks in request DTO?
     private List<Task> tasks;
 
     public HouseholdDTO(String notes, List<User> users, List<Task> tasks) {

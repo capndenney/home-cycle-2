@@ -55,6 +55,13 @@ public class UserController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    // Update User Name Only
+    @PatchMapping("/{id}")
+    public ResponseEntity<User> patchUser(@PathVariable int id, @RequestBody UserRequestDTO userDTO) {
+        User updatedUser = userService.patchUser(id, userDTO);
+        return ResponseEntity.ok(updatedUser);
+    }
+
     // "Delete" User by ID
     @PutMapping("/{id}/delete")
     public ResponseEntity<?> deleteUser(@PathVariable int id) {
