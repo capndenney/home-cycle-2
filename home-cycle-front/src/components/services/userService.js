@@ -20,6 +20,6 @@ export const userService = {
     getMe: () => api.get('users/me'),
     create: async (userDto) => api.post('users/new', userDto),
     getUser: (userId) => api.get(`users/${userId}`),
-    updateUser: (userId, userData) => api.put(`users/${userId}`, userData),
+    updateUser: (userId, userData) => api.patch(`users/${userId}`, userData),
     deleteUser: (userId) => api.delete(`users/${userId}/delete`)
 }
