@@ -2,11 +2,13 @@ import Button from "../common/Button";
 import Input from "../common/forms/Input";
 import { useState } from "react";
 import { userService } from "../services/userService";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 
 const LogIn = ({ setLogInStatus, clicked, setClicked }) => {
   const credentialFormat = { email: "", password: "" };
   const [creds, setCreds] = useState(credentialFormat);
+
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -22,6 +24,7 @@ const LogIn = ({ setLogInStatus, clicked, setClicked }) => {
       localStorage.setItem("userId", response.userId);
       localStorage.setItem("householdId", response.householdId);
       setLogInStatus(true);
+      navigate("/");
     } catch (er) {
       console.error("Login failed:", er);
       setClicked((prev) => prev + 1);

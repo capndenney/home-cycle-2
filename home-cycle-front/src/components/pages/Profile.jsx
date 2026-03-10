@@ -23,6 +23,11 @@ export const Profile = ({ handleLogout }) => {
     setInputData((oldData) => ({ ...oldData, [id]: value }));
   };
 
+  const handlePWChange = (e) => {
+    const { id, value } = e.target;
+    setPasswordForm((oldData) => ({ ...oldData, [id]: value}));
+  }
+
   useEffect(() => {
     fetchUserHHData();
   }, []);
@@ -128,23 +133,23 @@ export const Profile = ({ handleLogout }) => {
       <Input
         id="currentPassword"
         label="Current Password"
-        value={passwordForm.currentPassword}
+        value={passwordForm.currentPassword || ""}
         type="password"
-        handleChange={handleChange}
+        handleChange={handlePWChange}
       />
       <Input
         id="newPassword"
         label="New Password"
-        value={passwordForm.newPassword}
+        value={passwordForm.newPassword || ""}
         type="password"
-        handleChange={handleChange}
+        handleChange={handlePWChange}
       />
       <Input
         id="confirmPassword"
         label="Confirm New Password"
-        value={passwordForm.confirmPassword}
+        value={passwordForm.confirmPassword || ""}
         type="password"
-        handleChange={handleChange}
+        handleChange={handlePWChange}
       />
       {passwordErrors.length > 0 && <p classes="error">{passwordErrors}</p>}
       <Button
