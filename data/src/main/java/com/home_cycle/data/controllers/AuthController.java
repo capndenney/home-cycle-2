@@ -1,9 +1,6 @@
 package com.home_cycle.data.controllers;
 
-import com.home_cycle.data.dto.request.AuthRequestDTO;
-import com.home_cycle.data.dto.request.TokenValidationRequestDTO;
-import com.home_cycle.data.dto.request.UserDTO;
-import com.home_cycle.data.dto.request.UserRequestDTO;
+import com.home_cycle.data.dto.request.*;
 import com.home_cycle.data.dto.response.AuthResponseDTO;
 import com.home_cycle.data.dto.response.UserResponseDTO;
 import com.home_cycle.data.models.User;
@@ -12,7 +9,6 @@ import com.home_cycle.data.services.TokenBlacklistService;
 import com.home_cycle.data.services.UserService;
 import com.home_cycle.data.utils.JwtTokenUtil;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
