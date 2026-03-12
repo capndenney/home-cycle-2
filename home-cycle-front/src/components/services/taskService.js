@@ -5,6 +5,6 @@ export const taskService = {
     getTasks: () => api.get('tasks'),
     getTask: (taskId) => api.get(`tasks/${taskId}`),
     updateTask: (taskId, taskDto) => api.put(`tasks/${taskId}`, taskDto),
-    completeTask: (taskId, userId) => api.put(`tasks/${taskId}/complete`, userId), // TODO: Passing UserID so Completed By can be filled out.
+    completeTask: (taskId, userId) => api.put(`tasks/${taskId}/complete`, userId), 
     deleteTask: (taskId) => api.delete(`tasks/${taskId}`)
 }

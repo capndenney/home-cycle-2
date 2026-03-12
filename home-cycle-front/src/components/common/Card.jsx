@@ -1,5 +1,3 @@
-import "./card.css";
-
 const Card = ({ viewType, children }) => {
   return (
     <>

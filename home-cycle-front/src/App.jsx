@@ -69,7 +69,6 @@ function App() {
       setTaskArray(response.data);
     } catch (er) {
       console.error("Error fetching tasks:", er);
-      // TODO: Add error handling UI
     }
   };
 
