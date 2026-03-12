@@ -1,12 +1,13 @@
-const Button = ({ id, type, label, handleClick, classes }) => {
+const Button = ({ id, type, label, handleClick, classes, disabled }) => {
   return (
     <button
       id={`${id}-button`}
       type={type}
       onClick={handleClick}
       className={classes}
+      disabled={disabled}
     >
-      {label}
+      {disabled ? "Loading..." : label}
     </button>
   );
 };

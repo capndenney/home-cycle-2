@@ -16,8 +16,6 @@ export const Profile = ({ handleLogout }) => {
   const hhId = localStorage.getItem("householdId");
   const userId = localStorage.getItem("userId");
 
-  // TODO: Handle password change
-
   const handleChange = (e) => {
     const { id, value } = e.target;
     setInputData((oldData) => ({ ...oldData, [id]: value }));
@@ -46,7 +44,6 @@ export const Profile = ({ handleLogout }) => {
       setSavedData(combine);
     } catch (er) {
       console.error("Error fetching User or Household:", er);
-      // TODO: Add error handling UI
     }
   };
 
@@ -121,6 +118,7 @@ export const Profile = ({ handleLogout }) => {
   return (
     <div className="profile-page">
       <h1>Profile Details</h1>
+      <div className="profile-section card">
       <h2>User</h2>
       <p>Name: </p>
       <Input
@@ -129,6 +127,8 @@ export const Profile = ({ handleLogout }) => {
         handleChange={handleChange}
       />
       <p>Email: {localStorage.getItem("email")}</p>
+      </div>
+      <div className="profile-section card">
       <h3>Change Password</h3>
       <Input
         id="currentPassword"
@@ -158,6 +158,8 @@ export const Profile = ({ handleLogout }) => {
         handleClick={handlePasswordUpdate}
         classes="button"
       />
+      </div>
+      <div className="profile-section card">
       <h2>Household</h2>
       <TextArea
         id="notes"
@@ -177,6 +179,7 @@ export const Profile = ({ handleLogout }) => {
         handleClick={handleCancel}
         classes="button"
       />
+      </div>
       <br />
       <br />
       <br />

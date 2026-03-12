@@ -9,7 +9,7 @@ const Input = ({
   checked,
 }) => {
   return (
-    <>
+    <div className="input-group">
       <label htmlFor={id}>
         {label}
         {required && "*"}
@@ -22,7 +22,7 @@ const Input = ({
         onChange={handleChange}
         checked={checked}
       />
-    </>
+    </div>
   );
 };
 

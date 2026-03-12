@@ -12,7 +12,6 @@ const EditTask = ({ saveTask, tasks, removeTaskFromState, triggerRefresh }) => {
   const loadTask = id ? tasks.find((t) => t.id === Number(id)) : null;
 
   const getInitialTaskData = () => {
-
     let initialRecur = 0;
     let initialUnit = 1;
 
@@ -30,7 +29,7 @@ const EditTask = ({ saveTask, tasks, removeTaskFromState, triggerRefresh }) => {
       }
     }
 
-   if (loadTask) {
+    if (loadTask) {
       return {
         title: loadTask.title || "",
         id: loadTask.id,
@@ -78,16 +77,18 @@ const EditTask = ({ saveTask, tasks, removeTaskFromState, triggerRefresh }) => {
 
   const handleSave = async (e) => {
     e.preventDefault();
-    const dateForSave = dueData ? dueData.toISOString().split('T')[0] : null;
+    const dateForSave = dueData ? dueData.toISOString().split("T")[0] : null;
 
     const taskDto = {
       title: titleData,
       description: descData,
       dueDate: dateForSave,
       completed: compData,
-      householdId: localStorage.getItem("householdId") ? Number(localStorage.getItem("householdId")) : null,
+      householdId: localStorage.getItem("householdId")
+        ? Number(localStorage.getItem("householdId"))
+        : null,
       createdBy: Number(localStorage.getItem("userId")),
-      recurrence: Number(recurData) * Number(unitData)
+      recurrence: Number(recurData) * Number(unitData),
     };
 
     try {
@@ -157,20 +158,19 @@ const EditTask = ({ saveTask, tasks, removeTaskFromState, triggerRefresh }) => {
         label="Completed:"
         handleChange={handleCheck}
       />
-      <Input
-        type="number"
-        value={recurData}
-        label="Recurrence:"
-        handleChange={(e) => setRecurData(e.target.value)}
-      />
-      <select
-        value={unitData}
-        onChange={(e) => setUnitData(e.target.value)}
-      >
-        <option value={1}>Days</option>
-        <option value={7}>Weeks</option>
-        <option value={30}>Months</option>
-      </select>
+      <div className="recurrence-group">
+        <Input
+          type="number"
+          value={recurData}
+          label="Recurrence:"
+          handleChange={(e) => setRecurData(e.target.value)}
+        />
+        <select value={unitData} onChange={(e) => setUnitData(e.target.value)}>
+          <option value={1}>Days</option>
+          <option value={7}>Weeks</option>
+          <option value={30}>Months</option>
+        </select>
+      </div>
       <h4>Due Date:</h4>
       <DayPicker
         mode="single"
@@ -182,9 +182,15 @@ const EditTask = ({ saveTask, tasks, removeTaskFromState, triggerRefresh }) => {
             : `Please Select a Due Date`
         }
       />
-      <Button label="Save" handleClick={handleSave}/>
-      <Button label="Cancel" handleClick={handleCancel}/>
-      <Button label="Delete" handleClick={handleDelete} classes="btn-danger"/>
+      <div className="form-actions">
+        <Button label="Save" handleClick={handleSave} />
+        <Button label="Cancel" handleClick={handleCancel} />
+        <Button
+          label="Delete"
+          handleClick={handleDelete}
+          classes="btn-danger"
+        />
+      </div>
     </Card>
   );
 };
