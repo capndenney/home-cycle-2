@@ -111,7 +111,7 @@ const EditTask = ({ saveTask, tasks, removeTaskFromState, triggerRefresh }) => {
     } catch (er) {
       console.error("Error saving task:", er);
       triggerRefresh();
-      // TODO: If time, add in error handling to display message to user on failure.
+      alert("Task not Saved! Please try again.")
     }
   };
 
