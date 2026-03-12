@@ -2,7 +2,7 @@ import Button from "../common/Button";
 
 export const FilterPane = ({ filterStatus, setFilterStatus, dueWithinDays, setDueWithinDays, onlyRecurring, setOnlyRecurring }) => {
   return (
-    <>
+    <div className="filter-bar">
       <div className="filter-group">
         <label htmlFor="status-filter">Status: </label>
         <select 
@@ -38,6 +38,6 @@ export const FilterPane = ({ filterStatus, setFilterStatus, dueWithinDays, setDu
           Recurring Only
         </label>
       </div>
-    </>
+    </div>
   );
 };

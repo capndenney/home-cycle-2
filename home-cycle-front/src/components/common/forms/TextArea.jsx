@@ -9,7 +9,7 @@ const TextArea = ({
   handleChange,
 }) => {
   return (
-    <>
+    <div className="input-group">
       <label htmlFor={id}>
         {label}
         {required && "*"}
@@ -22,7 +22,7 @@ const TextArea = ({
         ref={ref}
         onChange={handleChange}
       ></textarea>
-    </>
+    </div>
   );
 };
 
