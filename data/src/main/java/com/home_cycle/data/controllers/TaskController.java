@@ -56,7 +56,6 @@ public class TaskController {
     }
 
     // Add new task
-    // TODO: Determine connection point to front end and link found user ID to task creation
     @PostMapping("/newtask")
     public ResponseEntity<?> createTask(@Validated @RequestBody TaskDTO taskDTO) {
         User user = userRepository.findById(taskDTO.getCreatedBy()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
@@ -67,7 +66,7 @@ public class TaskController {
         task.setHousehold(household);
         task.setDueDate(taskDTO.getDueDate());
         task.setCompleted(taskDTO.isCompleted());
-        task.setRecurrence(taskDTO.getRecurrence()); // TODO: use plusDays for date math
+        task.setRecurrence(taskDTO.getRecurrence());
         task.setCreatedBy(user);
         Task savedTask = taskRepository.save(task);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedTask);
